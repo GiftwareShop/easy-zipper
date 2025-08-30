@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
-export default function FileZipper() {
+import FileList from "./FileList";
+import FolderList from "./FolderList";
+import SummaryDownload from "./SummaryDownload";
+
+export default function Zipper() {
   const [files, setFiles] = useState([]);
   const [folderFiles, setFolderFiles] = useState([]);
   const [folders, setFolders] = useState([]);
@@ -54,94 +58,20 @@ export default function FileZipper() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">File & Folder Zipper</h1>
+        <h1 className="text-5xl font-extrabold text-gray-800 mb-8 text-center">Easy Zipper</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          {/* Files Card */}
-          <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-            <p className="font-semibold text-gray-700 mb-3 text-lg">Files</p>
-            <input
-              type="file"
-              multiple
-              onChange={handleFilesChange}
-              className="mb-4 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-            {files.length > 0 && (
-              <ul className="divide-y divide-gray-200 max-h-64 overflow-y-auto rounded-md border border-gray-200">
-                {files.slice(0, 10).map((f, i) => (
-                  <li key={i} className="flex justify-between items-center px-4 py-2">
-                    <span className="text-gray-700 text-sm">{f.name} ({(f.size/1024).toFixed(1)} KB)</span>
-                    <button
-                      className="text-red-500 text-sm hover:text-red-700 transition"
-                      onClick={() => removeFile(i)}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-                {files.length > 10 && <li className="px-4 py-2 text-gray-500 text-sm">...and {files.length - 10} more</li>}
-              </ul>
-            )}
-          </div>
-
-          {/* Folders Card */}
-          <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col">
-            <p className="font-semibold text-gray-700 mb-3 text-lg">Folders</p>
-            <input
-              type="file"
-              webkitdirectory=""
-              directory=""
-              multiple
-              onChange={handleFoldersChange}
-              className="mb-4 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-            {folders.length > 0 && (
-              <ul className="divide-y divide-gray-200 max-h-64 overflow-y-auto rounded-md border border-gray-200">
-                {folders.slice(0, 10).map((folder, i) => (
-                  <li key={i} className="flex justify-between items-center px-4 py-2">
-                    <span className="text-gray-700 text-sm">{folder}</span>
-                    <button
-                      className="text-red-500 text-sm hover:text-red-700 transition"
-                      onClick={() => removeFolder(i)}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-                {folders.length > 10 && <li className="px-4 py-2 text-gray-500 text-sm">...and {folders.length - 10} more</li>}
-              </ul>
-            )}
-          </div>
+          <FileList files={files} onFilesChange={handleFilesChange} removeFile={removeFile} />
+          <FolderList folders={folders} onFoldersChange={handleFoldersChange} removeFolder={removeFolder} />
         </div>
 
-        {/* Summary & Download */}
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-4">
-          <div className="flex justify-between mb-2">
-            <p className="text-gray-700 font-medium">Total files:</p>
-            <p className="text-gray-900 font-semibold">{files.length + folderFiles.length}</p>
-          </div>
-          <div className="flex justify-between mb-4">
-            <p className="text-gray-700 font-medium">Total size:</p>
-            <p className="text-gray-900 font-semibold">{(totalSize / (1024*1024)).toFixed(2)} MB</p>
-          </div>
-
-          <button
-            onClick={handleDownloadZip}
-            disabled={!(files.length + folderFiles.length) || zipping}
-            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition"
-          >
-            {zipping ? `Zipping... ${progress}%` : "Download ZIP"}
-          </button>
-
-          {zipping && (
-            <div className="mt-4 w-full bg-gray-200 rounded-full h-4">
-              <div
-                className="bg-blue-500 h-4 rounded-full transition-all duration-200"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          )}
-        </div>
+        <SummaryDownload
+          totalFiles={files.length + folderFiles.length}
+          totalSize={totalSize}
+          zipping={zipping}
+          progress={progress}
+          onDownload={handleDownloadZip}
+        />
       </div>
     </div>
   );
