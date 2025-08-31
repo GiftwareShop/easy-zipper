@@ -51,6 +51,6 @@ Open your browser and navigate to the URL shown in the terminal (http://localhos
 
 If you enjoy using this project, here are a few ways you can support and stay connected:
 
-- **Watch the Demo on YouTube:** [PixelArtCanvas Demo](https://youtube.com/shorts/m1q9cuhEG_g) 
+- **Watch the Demo on YouTube:** [EasyZipper Demo](https://youtube.com/shorts/m1q9cuhEG_g) 
 - **Follow me on X:** [@xGiftware](https://x.com/xGiftware)   
 - **Support the Project:** [Donate](https://buy.stripe.com/00waEW8uV3ZOe2nfiGb7y01)
